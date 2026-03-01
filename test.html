@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<body>
+<input id="token" placeholder="Tokenni shu yerga yozing" style="width:400px"/>
+<button onclick="connect()">Ulanish</button>
+<br><br>
+<input id="msg" placeholder="Xabar" />
+<button onclick="send()">Yuborish</button>
+<div id="chat"></div>
+
+<script>
+    var ws;
+
+    function connect() {
+        var token = document.getElementById('token').value;
+        ws = new WebSocket('ws://127.0.0.1:8000/ws/chat/?token=' + token);
+
+        ws.onopen = function() {
+            document.getElementById('chat').innerHTML += '<p>Ulandi!</p>';
+        };
+
+        ws.onmessage = function(e) {
+            var data = JSON.parse(e.data);
+            document.getElementById('chat').innerHTML += 
+                '<p><b>' + data.username + ':</b> ' + data.message + '</p>';
+        };
+
+        ws.onerror = function() {
+            document.getElementById('chat').innerHTML += '<p>Xato!</p>';
+        };
+    }
+
+    function send() {
+        var msg = document.getElementById('msg').value;
+        ws.send(JSON.stringify({ message: msg }));
+    }
+</script>
+</body>
+</html>
