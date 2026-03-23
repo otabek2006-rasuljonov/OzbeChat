@@ -1,0 +1,69 @@
+Title page:
+Rasuljonov Otabek Ulug'bek o'g'li
+Mavzu: Raqamli forensika asoslari va insidentlarni tergov qilish bosqichlari
+
+Kirish
+Raqamli forensika — zamonaviy axborot tizimlarida sodir bo‘lgan hodisalarni aniqlash, dalillarni yig‘ish, saqlash, tahlil qilish va huquqiy jihatdan taqdim etish bilan shug‘ullanuvchi fan va amaliyotdir. Kiberxavfsizlik tahdidlari — ma'lumotlarning ruxsatsiz o‘g‘irlanishi, servislarni rad etish hujumlari, zararli dastur infektsiyalari va ichki suiiste'mollar — tashkilotlar faoliyatiga jiddiy ta’sir ko‘rsatadi. Shu bois, insidentlarni tez va ishonchli tarzda tergov qilish va kelgusidagi vaziyatlarni oldini olish uchun tizimli forensik yondashuv talab etiladi.
+
+Maqsad va vazifalar
+Ushbu referatning maqsadi raqamli forensikaning asosiy tushunchalari hamda insidentlarni tergov qilish bosqichlarini tushuntirish, shuningdek amaliy tavsiyalar berishdir. Vazifalar: asosiy terminlarni aniqlash; dalillar bilan ishlash tamoyillarini bayon etish; tergov bosqichlarini bosqichma‑bosqich yoritish; tashkilotlar uchun amaliy qadamlar taklif etish.
+
+Asosiy tushunchalar
+Elektron dalil (electronic/digital evidence): kompyuter, server, mobil qurilma, tarmoq trafiki yoki boshqa raqamli qurilmalarda mavjud bo‘lgan, voqeani tasdiqlash yoki inkor etish imkonini beruvchi ma’lumotlardir.
+Dalil yaxlitligi (integrity): dalilning original holatini saqlab qolish tamoyili bo‘lib, hash funktsiyalari (MD5, SHA-1, SHA-256) yordamida tekshiriladi.
+Chain of custody (nazorat zanjiri): dalilni topishdan tortib, uning sudda taqdim etilishigacha bo‘lgan barcha harakatlarni (kim olgan, qayerda saqlangan, qaysi usul bilan ko‘chirib olindi) hujjatlashtirish.
+
+Forensik usullar va vositalar
+Live forensics: ishlayotgan tizimdan real vaqt rejimida ma’lumot yig‘ish — jarayonlarning, tarmoq ulanishlarining, xotira (RAM) tarkibining o‘rganilishini o‘z ichiga oladi. Bu usulda tizimga aralashish xavfi mavjud, shuning uchun qat’iy protokol talab etiladi.
+Dead forensics (imaging): apparat yoki diskning to‘liq bit‑dar‑bit ko‘chirmasini (bit‑wise image) olish va undan tahlil qilish; original qurilmaga tegilmaydi.
+Memory forensics: xotira dump‑lari orqali vaqtinchalik ma’lumotlarni (jarayonlar, parollar, şifrlangan sessiyalar) tahlil qilish (Volatility kabi vositalar).
+Network forensics: tarmoq paketlarini yozib olish va tahlil qilish (Wireshark, tcpdump); tarmoqlar orqali sodir bo‘lgan boshqaruv va axborot almashuvini tiklash.
+Asboblar: EnCase, FTK, Autopsy/Sleuth Kit, Volatility, Wireshark, FTK Imager, dd, Sleuth Kit, HashCalc, etc.
+
+Dalillar bilan ishlash tamoyillari
+1. Saqlash (Preservation)
+- Original dalilni o‘zgarmas holda saqlash; agar kerak bo‘lsa, to‘liq imaging olish, originalga tegmaslik.
+2. Identifikatsiya (Identification)
+- Hodisa manbalarini va mumkin bo‘lgan dalillarni aniqlash: disklar, log fayllar, xotira, tarmoq yozuvlari.
+3. To‘plash (Collection)
+- Standart asboblar va protseduralardan foydalanib, dalillarni yig‘ish; har bir amaliyotni hujjatlashtirish.
+4. Tahlil (Analysis)
+- Dalillarni izchil tahlil qilish: fayl tizimi, registrlar, loglar, tarmoq paketlari, xotira bo‘limlari.
+5. Hujjatlashtirish (Documentation)
+- Har bir qadam yozib borilishi, chain‑of‑custody jurnali yuritilishi.
+6. Taqdim etish (Presentation)
+- Natijalarni sudda yoki ichki auditda tushunarli tarzda taqdim etish; texnik jihatdan aniq, huquqiy jihatdan asosli bo‘lishi lozim.
+
+Insidentlarni tergov qilish bosqichlari
+1. Tayyorlov (Preparation)
+- Siyosatlarni ishlab chiqish (incident response plan), jamoa va rollarni belgilash, asboblar va test muhiti tashkil etish.
+2. Aniqlash va xabardor bo‘lish (Detection & Identification)
+- Monitoring vositalari (IDS/IPS, SIEM) orqali anomaliyalarni aniqlash; hodisa darajasini belgilash.
+3. Birinchi javob va cheklash (Initial Response & Containment)
+- Voqeaning tarqalishini to‘xtatish: qurilmalarni izolyatsiya qilish, tarmoq segmentatsiyasi, trafikni to‘xtatish yoki yo‘naltirish.
+4. Bartaraf etish (Eradication)
+- Zararlı fayllarni o‘chirish, zaifliklarni bartaraf etish (patching), kirish kalitlarini o‘zgartirish.
+5. Tiklash (Recovery)
+- Xizmatlarni xavfsiz holatda tiklash va monitoringni kuchaytirish; ishlab chiqarish muhitini asta‑sekin qayta ishga tushirish.
+6. Xulosalar va dars olish (Lessons Learned)
+- Hodisani tahlil qilish, qarorlar va protseduralarni yangilash, personalni qayta o‘qitish.
+
+Huquqiy va axloqiy jihatlar
+- Dalillarni yig‘ish va ishlatishda mahalliy qonunlar (shuningdek, kibermaydon uchun xalqaro me’yorlar) va shaxsiy hayotni himoya qilish qoidalariga rioya qilish zarur.
+- Ruxsat va warrant talab qilinadigan holatlarda, yuridik bo‘lim bilan hamkorlik muhim.
+- Sud uchun dalilni tayyorlashda dalilning yaxlitligi va chain‑of‑custody to‘liq bo‘lishi kerak.
+
+Amaliy tavsiyalar
+- Oldindan tayyorgarlik: protseduralar, asboblar, va zaxiraviy muhitni tashkil etish.
+- Loglarni va tizim snapshotlarini saqlash: muhim loglar kamida 6–12 oy davomida himoyalangan holda saqlansin.
+- Muntazam mashg‘ulotlar: tabletop treninglar va texnik qoidalar bo‘yicha mashqlar o‘tkazish.
+- Hamkorlik: IT, xavfsizlik, yuridik va rahbariyat o‘rtasida aniq aloqa kanallari bo‘lsin.
+
+Xulosa
+Raqamli forensika va insidentlarni tergov qilish — tashkilotlar uchun kiberxavflardan himoya qilish, voqealarni aniqlash va sudga tayyorlashda hal qiluvchi rolga ega. Tizimli yondashuv, qat’iy hujjatlashtirish va doimiy tayyorgarlik — muvaffaqiyat kalitidir.
+
+Adabiyotlar (tanlangan)
+1. NIST SP 800‑86: Guide to Integrating Forensic Techniques into Incident Response.
+2. ISO/IEC 27037: Guidelines for identification, collection, acquisition and preservation of digital evidence.
+3. Casey, Eoghan. Digital Evidence and Computer Crime. Academic Press.
+4. Carrier, Brian. File System Forensic Analysis. Addison‑Wesley.
