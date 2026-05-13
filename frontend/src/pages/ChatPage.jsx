@@ -13,7 +13,7 @@ const ChatLayout = () => {
     users,
     isLoading,
     error,
-    openConversation,
+    selectConversation,
     sendMessage,
     runUserSearch,
     startDirectConversation,
@@ -29,7 +29,7 @@ const ChatLayout = () => {
             activeConversationId={activeConversation?.id}
             currentUsername={auth.username}
             users={users}
-            onOpenConversation={openConversation}
+            onOpenConversation={selectConversation}
             onSearch={runUserSearch}
             onStartDirect={startDirectConversation}
             onCreateGroup={createGroupConversation}
@@ -50,7 +50,7 @@ const ChatLayout = () => {
               activeConversationId={activeConversation?.id}
               currentUsername={auth.username}
               users={users}
-              onOpenConversation={openConversation}
+              onOpenConversation={selectConversation}
               onSearch={runUserSearch}
               onStartDirect={startDirectConversation}
               onCreateGroup={createGroupConversation}

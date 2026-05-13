@@ -61,7 +61,6 @@ export const ChatProvider = ({ children }) => {
 
   const openConversation = useCallback(
     async (conversationId) => {
-      setActiveConversationId(conversationId)
       closeSocket()
       setError('')
 
@@ -101,6 +100,10 @@ export const ChatProvider = ({ children }) => {
     [auth?.access, closeSocket],
   )
 
+  const selectConversation = useCallback((conversationId) => {
+    setActiveConversationId(conversationId)
+  }, [])
+
   const sendMessage = (text) => {
     const payload = text.trim()
     if (!payload || !socketRef.current || socketRef.current.readyState !== WebSocket.OPEN) {
@@ -128,20 +131,20 @@ export const ChatProvider = ({ children }) => {
         const withoutCurrent = prev.filter((item) => item.id !== conversation.id)
         return [conversation, ...withoutCurrent]
       })
-      await openConversation(conversation.id)
+      setActiveConversationId(conversation.id)
       return conversation
     },
-    [openConversation],
+    [],
   )
 
   const createGroupConversation = useCallback(
     async ({ name, members }) => {
       const conversation = await createGroup({ name, members })
       setConversations((prev) => [conversation, ...prev])
-      await openConversation(conversation.id)
+      setActiveConversationId(conversation.id)
       return conversation
     },
-    [openConversation],
+    [],
   )
 
   useEffect(() => {
@@ -176,12 +179,13 @@ export const ChatProvider = ({ children }) => {
       error,
       loadConversations,
       openConversation,
+      selectConversation,
       sendMessage,
       runUserSearch,
       startDirectConversation,
       createGroupConversation,
     }),
-    [activeConversation, conversations, error, isLoading, loadConversations, messages, openConversation, runUserSearch, startDirectConversation, createGroupConversation, users],
+    [activeConversation, conversations, error, isLoading, loadConversations, messages, openConversation, runUserSearch, selectConversation, startDirectConversation, createGroupConversation, users],
   )
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>
