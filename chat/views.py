@@ -29,10 +29,11 @@ def _conversation_queryset_for_user(user):
     return Conversation.objects.filter(
         memberships__user=user,
         memberships__is_active=True,
-    ).distinct().order_by('-created_at')
+    ).select_related('created_by').prefetch_related('memberships__user__profile').distinct().order_by('-created_at')
 
 
 def _conversation_payload(conversation, current_user):
+    membership = conversation.memberships.get(user=current_user)
     active_members = conversation.memberships.filter(is_active=True).select_related('user', 'user__profile')
     members = [
         {
@@ -46,12 +47,12 @@ def _conversation_payload(conversation, current_user):
     if conversation.conversation_type == 'direct':
         last_message = conversation.direct_messages.order_by('-created_at').first()
         unread_count = conversation.direct_messages.filter(
-            created_at__gt=conversation.memberships.get(user=current_user).last_read_at
+            created_at__gt=membership.last_read_at
         ).exclude(sender=current_user).count()
     else:
         last_message = conversation.group_messages.order_by('-created_at').first()
         unread_count = conversation.group_messages.filter(
-            created_at__gt=conversation.memberships.get(user=current_user).last_read_at
+            created_at__gt=membership.last_read_at
         ).exclude(sender=current_user).count()
 
     return {
@@ -254,7 +255,7 @@ def _delete_message_for_user(user, message_id):
 
     target_message = next((msg for msg in candidates if msg.sender_id == user.id), None)
     if target_message is None:
-        return Response({'error': 'Siz faqat oz xabaringizni ochira olasiz'}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'error': "Siz faqat o'z xabaringizni ochira olasiz"}, status=status.HTTP_403_FORBIDDEN)
 
     target_message.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
@@ -262,12 +263,12 @@ def _delete_message_for_user(user, message_id):
 
 @api_view(['GET', 'DELETE'])
 @permission_classes([IsAuthenticated])
-def messages(request, conversation_id):
+def messages(request, resource_id):
     if request.method == 'DELETE':
-        return _delete_message_for_user(request.user, conversation_id)
+        return _delete_message_for_user(request.user, resource_id)
 
     try:
-        conversation = Conversation.objects.get(id=conversation_id)
+        conversation = Conversation.objects.get(id=resource_id)
     except Conversation.DoesNotExist:
         return Response({'error': 'Suhbat topilmadi'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -321,12 +322,6 @@ def leave_conversation(request, conversation_id):
     membership.save(update_fields=['is_active', 'left_at'])
 
     return Response({'status': 'left'})
-
-
-@api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
-def delete_message(request, message_id):
-    return _delete_message_for_user(request.user, message_id)
 
 
 # Backward-compatible wrappers

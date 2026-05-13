@@ -9,10 +9,19 @@ from rest_framework_simplejwt.tokens import AccessToken
 
 from .models import Conversation, ConversationMember, DirectMessage, GroupMessage
 
+INITIAL_MESSAGE_LIMIT = 20
+
 
 class ChatConsumer(WebsocketConsumer):
+    def _extract_token(self):
+        headers = {key.decode().lower(): value.decode() for key, value in self.scope.get('headers', [])}
+        auth_header = headers.get('authorization', '')
+        if auth_header.lower().startswith('bearer '):
+            return auth_header.split(' ', 1)[1].strip()
+        return parse_qs(self.scope['query_string'].decode()).get('token', [None])[0]
+
     def connect(self):
-        token = parse_qs(self.scope['query_string'].decode()).get('token', [None])[0]
+        token = self._extract_token()
         if not token:
             self.close()
             return
@@ -47,10 +56,14 @@ class ChatConsumer(WebsocketConsumer):
             self.user.profile.save(update_fields=['status', 'last_seen'])
 
         if self.conversation.conversation_type == 'direct':
-            messages = self.conversation.direct_messages.select_related('sender').order_by('-created_at')[:20]
+            messages = self.conversation.direct_messages.select_related('sender').order_by('-created_at')[
+                :INITIAL_MESSAGE_LIMIT
+            ]
             message_type = 'direct'
         else:
-            messages = self.conversation.group_messages.select_related('sender').order_by('-created_at')[:20]
+            messages = self.conversation.group_messages.select_related('sender').order_by('-created_at')[
+                :INITIAL_MESSAGE_LIMIT
+            ]
             message_type = 'group'
 
         for msg in reversed(list(messages)):
